@@ -1,16 +1,85 @@
-## Hi there 👋
+#include <cs50.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
 
-<!--
-**ArraisLe/ArraisLe** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+// Function to count letters
+int count_letters(char text[])
+{
+    int letters = 0;
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        if (isalpha(text[i]))
+        {
+            letters++;
+        }
+    }
+    return letters;
+}
 
-Here are some ideas to get you started:
+// Function to count words
+int count_words(char text[])
+{
+    int words = 1; // Start at 1 since the first word doesn't follow a space
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        if (text[i] == ' ')
+        {
+            words++;
+        }
+    }
+    return words;
+}
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+// Function to count sentences
+int count_sentences(char text[])
+{
+    int sentences = 0;
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        if (text[i] == '.' || text[i] == '!' || text[i] == '?')
+        {
+            sentences++;
+        }
+    }
+    return sentences;
+}
+
+int main(void)
+{
+    char text[1000];
+
+    // Prompt the user for input
+    printf("Text: ");
+    fgets(text, sizeof(text), stdin);
+
+    // Count letters, words, and sentences
+    int letters = count_letters(text);
+    int words = count_words(text);
+    int sentences = count_sentences(text);
+
+    // Calculate averages per 100 words
+    float L = ((float) letters / words) * 100;
+    float S = ((float) sentences / words) * 100;
+
+    // Coleman-Liau index formula
+    float index = 0.0588 * L - 0.296 * S - 15.8;
+    int grade = round(index);
+
+    // Print the result based on the grade
+    if (grade < 1)
+    {
+        printf("Before Grade 1\n");
+    }
+    else if (grade >= 16)
+    {
+        printf("Grade 16+\n");
+    }
+    else
+    {
+        printf("Grade %d\n", grade);
+    }
+
+    return 0;
+}
